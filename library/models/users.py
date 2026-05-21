@@ -64,6 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email", "role", "gender"]
 
+    def __str__(self):
+        return self.username
+
 
 class Membership(models.Model):
     member = models.ForeignKey(
@@ -79,3 +82,6 @@ class Membership(models.Model):
     joined_at = models.DateField(
         default=timezone.now
     )
+
+    def __str__(self):
+        return f"{self.member.username} {self.library.name}"

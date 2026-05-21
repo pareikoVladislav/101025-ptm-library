@@ -22,3 +22,7 @@ class Review(models.Model):
         null=True,
         blank=True
     )
+
+    def __str__(self):
+        rating = self.rating if self.rating else 'NA'
+        return f"Review on the book: {self.book.name} by {self.reviewer.username} with rate: {rating}"

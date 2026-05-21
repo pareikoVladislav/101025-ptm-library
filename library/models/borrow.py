@@ -41,3 +41,6 @@ class Borrow(models.Model):
         if self.is_returned and self.return_actual_date < datetime.now():
             return False
         return True
+
+    def __str__(self):
+        return f"Книга {self.book.name} выдана {self.member.username}: {self.issue_date}"
