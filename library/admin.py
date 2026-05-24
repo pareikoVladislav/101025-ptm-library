@@ -5,6 +5,7 @@ from library.models.books import Book
 from library.models.users import User, Membership
 from library.models.library import Library
 from library.models.publisher import Publisher
+from library.models.posts import Posts
 
 
 @admin.register(Author)
@@ -187,6 +188,39 @@ class PublisherModelAdmin(admin.ModelAdmin):
         'country',
         'city',
         'address',
+    ]
+
+    list_per_page = 50
+
+@admin.register(Posts)
+class PostsModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'post_text',
+        'author',
+        'library',
+        'moderated',
+        'published_date',
+        'updated_date',
+    ]
+
+    list_filter = [
+        'moderated',
+        'library',
+        'author',
+        'published_date',
+        'updated_date',
+    ]
+
+    search_fields = [
+        'title',
+        'post_text',
+        'author',
+        'library',
+    ]
+
+    list_editable = [
+        'moderated',
     ]
 
     list_per_page = 50
