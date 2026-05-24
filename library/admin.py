@@ -198,7 +198,6 @@ class PublisherModelAdmin(admin.ModelAdmin):
 class PostsModelAdmin(admin.ModelAdmin):
     list_display = [
         'title',
-        'post_text',
         'author',
         'library',
         'moderated',
@@ -259,4 +258,55 @@ class BorrowModelAdmin(admin.ModelAdmin):
 
     list_per_page = 50
 
+@admin.register(Event)
+class EventModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'library',
+        'date',
+        'description',
+    ]
 
+    list_filter = [
+        'library',
+        'date',
+        'books',
+    ]
+
+    search_fields = [
+        'title',
+        'description',
+        'library',
+        'books',
+    ]
+
+    list_editable = [
+        'library',
+        'date',
+    ]
+
+    list_per_page = 50
+
+@admin.register(EventParticipant)
+class EventParticipantModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'event',
+        'registration_date',
+        'member',
+    ]
+
+    list_filter = [
+        'event',
+        'registration_date',
+    ]
+
+    search_fields = [
+        'event',
+        'member',
+    ]
+
+    list_editable = [
+        'registration_date',
+    ]
+
+    list_per_page = 50
