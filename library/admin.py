@@ -5,9 +5,11 @@ from library.models.books import Book
 from library.models.users import User, Membership
 from library.models.library import Library
 from library.models.publisher import Publisher
+from library.models.category import Category
 from library.models.posts import Posts
 from library.models.borrow import Borrow
 from library.models.events import Event, EventParticipant
+from library.models.review import Review
 
 
 @admin.register(Author)
@@ -141,7 +143,7 @@ class MembershipModelAdmin(admin.ModelAdmin):
 
     list_per_page = 50
 
-@admin.ModelAdmin(Library)
+@admin.register(Library)
 class LibraryModelAdmin(admin.ModelAdmin):
     list_display = [
         'name',
@@ -190,6 +192,26 @@ class PublisherModelAdmin(admin.ModelAdmin):
         'country',
         'city',
         'address',
+    ]
+
+    list_per_page = 50
+
+@admin.register(Category)
+class CategoryModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'name'
+    ]
+
+    list_filter = [
+        'name'
+    ]
+
+    search_fields = [
+        'name'
+    ]
+
+    list_editable = [
+        'name'
     ]
 
     list_per_page = 50
@@ -307,6 +329,33 @@ class EventParticipantModelAdmin(admin.ModelAdmin):
 
     list_editable = [
         'registration_date',
+    ]
+
+    list_per_page = 50
+
+@admin.register(Review)
+class ReviewModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'book',
+        'reviewer',
+        'rating',
+        'content',
+    ]
+
+    list_filter = [
+        'rating',
+        'book',
+        'reviewer',
+    ]
+
+    search_fields = [
+        'content',
+        'book',
+        'reviewer',
+    ]
+
+    list_editable = [
+        'rating',
     ]
 
     list_per_page = 50
