@@ -16,7 +16,7 @@ class Book(models.Model):
         'Library',
         related_name='books'
     )
-    description= models.TextField(
+    description = models.TextField(
         null=True,
         blank=True
     )
@@ -58,3 +58,6 @@ class Book(models.Model):
         related_name='books',
     )
     published_date = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return self.name

@@ -16,6 +16,9 @@ class Event(models.Model):
         related_name='events'
     )
 
+    def __str__(self):
+        return f"Событие {self.title} от {self.date}"
+
 
 class EventParticipant(models.Model):
     event = models.ForeignKey(
@@ -28,3 +31,14 @@ class EventParticipant(models.Model):
         related_name='events'
     )
     registration_date = models.DateTimeField(default=timezone.now)
+
+    def get_participant_count(self):
+        return self.member.count()
+
+    get_participant_count.short_description = 'count_participants'
+
+    def __str__(self):
+        users = [user.username for user in self.member.all()]
+        return f"Event {self.event.title} Participants: {users} in {self.registration_date}"
+        users_cnt = self.member.count()
+        return f"Event {self.event.title} subscribed {users_cnt} people"
