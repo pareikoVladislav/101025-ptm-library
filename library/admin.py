@@ -3,6 +3,7 @@ from django.contrib import admin
 from library.models.authors import Author
 from library.models.books import Book
 from library.models.users import User, Membership
+from library.models.library import Library
 
 
 @admin.register(Author)
@@ -135,3 +136,29 @@ class MembershipModelAdmin(admin.ModelAdmin):
     ]
 
     list_per_page = 50
+
+@admin.ModelAdmin(Library)
+class LibraryModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'location',
+        'website',
+    ]
+
+    list_filter = [
+        'location',
+    ]
+
+    search_fields = [
+        'name',
+        'location',
+        'website',
+    ]
+
+    list_editable = [
+        'website',
+    ]
+
+    list_per_page = 50
+
+
