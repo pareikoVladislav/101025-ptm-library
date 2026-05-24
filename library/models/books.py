@@ -16,7 +16,7 @@ class Book(models.Model):
         'Library',
         related_name='books'
     )
-    description= models.TextField(
+    description = models.TextField(
         null=True,
         blank=True
     )
