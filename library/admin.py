@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from library.models.authors import Author
 from library.models.books import Book
+from library.models.users import User, Membership
 
 
 @admin.register(Author)
@@ -67,6 +68,70 @@ class BookModelAdmin(admin.ModelAdmin):
         'publisher',
         'price',
         'discounted_price',
+    ]
+
+    list_per_page = 50
+
+@admin.register(User)
+class UserModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'role',
+        'gender',
+        'age',
+        'phone',
+        'is_staff',
+        'is_active',
+        'date_joined',
+    ]
+
+    list_filter = [
+        'role',
+        'gender',
+        'is_staff',
+        'is_active',
+        'date_joined',
+    ]
+
+    search_fields = [
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'phone',
+    ]
+
+    list_editable = [
+        'role',
+        'is_staff',
+        'is_active',
+    ]
+
+    list_per_page = 50
+
+@admin.register(Membership)
+class MembershipModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'member',
+        'library',
+        'joined_at',
+    ]
+
+    list_filter = [
+        'library',
+        'joined_at',
+    ]
+
+    search_fields = [
+        'member',
+        'library',
+    ]
+
+    list_editable = [
+        'joined_at',
     ]
 
     list_per_page = 50
