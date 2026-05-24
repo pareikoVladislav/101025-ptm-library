@@ -4,6 +4,7 @@ from library.models.authors import Author
 from library.models.books import Book
 from library.models.users import User, Membership
 from library.models.library import Library
+from library.models.publisher import Publisher
 
 
 @admin.register(Author)
@@ -161,4 +162,31 @@ class LibraryModelAdmin(admin.ModelAdmin):
 
     list_per_page = 50
 
+@admin.register(Publisher)
+class PublisherModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'country',
+        'city',
+        'address',
+    ]
 
+    list_filter = [
+        'country',
+        'city',
+    ]
+
+    search_fields = [
+        'name',
+        'country',
+        'city',
+        'address',
+    ]
+
+    list_editable = [
+        'country',
+        'city',
+        'address',
+    ]
+
+    list_per_page = 50
