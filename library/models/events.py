@@ -32,6 +32,11 @@ class EventParticipant(models.Model):
     )
     registration_date = models.DateTimeField(default=timezone.now)
 
+    def get_participant_count(self):
+        return self.member.count()
+
+    get_participant_count.short_description = 'count_participants'
+
     def __str__(self):
         users = [user.username for user in self.member.all()]
         return f"Event {self.event.title} Participants: {users} in {self.registration_date}"
