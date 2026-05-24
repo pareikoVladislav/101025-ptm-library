@@ -6,6 +6,8 @@ from library.models.users import User, Membership
 from library.models.library import Library
 from library.models.publisher import Publisher
 from library.models.posts import Posts
+from library.models.borrow import Borrow
+from library.models.events import Event, EventParticipant
 
 
 @admin.register(Author)
@@ -224,3 +226,37 @@ class PostsModelAdmin(admin.ModelAdmin):
     ]
 
     list_per_page = 50
+
+@admin.register(Borrow)
+class BorrowModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'member',
+        'book',
+        'library',
+        'issue_date',
+        'return_plane_date',
+        'return_actual_date',
+        'is_returned',
+    ]
+
+    list_filter = [
+        'is_returned',
+        'library',
+        'issue_date',
+        'return_plane_date',
+    ]
+
+    search_fields = [
+        'member',
+        'book',
+        'library',
+    ]
+
+    list_editable = [
+        'return_actual_date',
+        'is_returned',
+    ]
+
+    list_per_page = 50
+
+
