@@ -7,9 +7,10 @@ django.setup()
 
 # ### **Задача 1: Общее количество книг и среднее кол-во страниц**
 # **ТЗ:** Получить общее количество книг в базе данных и среднее кол-во страниц всех книг в одном запросе
-from library.models import Book, Author, Borrow, User, Library
-from django.db.models import Count, Avg, Min, Max, Sum, Q
-from django.db.models.functions import Round
+from library.models import Book, Author, Borrow, User, Library, Category
+from django.db.models import Count, Avg, Min, Max, Q, Case, When, CharField, Value, OuterRef, Subquery, F
+from django.db.models.functions import Round, ExtractMonth
+from django.utils import timezone
 
 books = Book.objects.aggregate(count_books=Count('id'), avg_pages=Round(Avg('pages'), 2))
 
@@ -63,3 +64,58 @@ print(books_in_library)
 
 ### **Задача 8: Книги с количеством займов и статусом популярности**
 # **ТЗ:** Для каждой книги подсчитать количество займов и пометить как популярную (>3 займов) или обычную
+books_with_popularity = Book.objects.annotate(
+    borrows_count=Count('borrows')
+).annotate(
+    status=Case(
+        When(borrows_count__gt=3, then=Value('Популярная')),
+        default=Value('Обычная'),
+        output_field=CharField()
+    )
+)
+
+for book in books_with_popularity:
+    print(f"{book.name} | Займов: {book.borrows_count} | Статус: {book.status}")
+
+### **Задача 9: Книги дороже средней цены в своем жанре**
+# **ТЗ:** Найти книги, цена которых превышает среднюю цену книг в том же жанре
+avg_price_by_category = Book.objects.filter(
+    category=OuterRef('category')
+).values('category').annotate(
+    avg_price=Avg('price')
+).values('avg_price')
+
+expensive_books = Book.objects.annotate(
+    category_avg=Subquery(avg_price_by_category)
+).filter(
+    price__gt=F('category_avg')
+)
+
+### **Задача 10: Библиотеки с книгами дороже средней цены всех книг**
+# **ТЗ:** Найти библиотеки, в которых есть книги дороже средней цены всех книг в системе
+global_avg_price = Book.objects.aggregate(avg=Avg('price'))['avg'] or 0
+
+libraries_with_expensive_books = Library.objects.filter(
+    books__price__gt=global_avg_price
+).distinct()
+
+### **Задача 11: Жанры с наибольшим разбросом цен**
+# **ТЗ:** Найти жанры с наибольшей разницей между максимальной и минимальной ценой книг
+categories_by_dispersion = Category.objects.annotate(
+    price_diff=Max('books__price') - Min('books__price')
+).order_by('-price_diff')
+
+### **Задача 12: Месяцы с наибольшим количеством просроченных займов**
+# **ТЗ:** Найти месяцы с наибольшим количеством займов, которые стали просроченными
+current_date = timezone.now().date()
+
+overdue_borrows = Borrow.objects.filter(
+    Q(is_returned=True, return_actual_date__gt=F('return_plane_date')) |
+    Q(is_returned=False, return_plane_date__lt=current_date)
+)
+
+top_months_for_overdue = overdue_borrows.annotate(
+    month=ExtractMonth('issue_date')
+).values('month').annotate(
+    count=Count('id')
+).order_by('-count')
